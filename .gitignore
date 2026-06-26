@@ -1,0 +1,17 @@
+.env
+*.pem
+*.key
+.yopass-data/
+
+*.log
+.DS_Store
+*.swp
+*~
+
+*.iso
+*.img
+*.tar.gz
+
+__pycache__/
+
+node_modules/
