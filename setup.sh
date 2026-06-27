@@ -7,7 +7,16 @@ sed -i 's/#//g' /etc/apk/repositories
 echo "$(cat /etc/apk/repositories | grep main | head -n 1 | sed 's/main/community/')" >> /etc/apk/repositories
 apk update
 
-apk add util-linux lvm2 device-mapper exfatprogs fuse-exfat neovim git curl wget python3 nodejs npm ripgrep fd build-base bash sqlite android-tools tmux htop jq fzf unzip gcompat openssh
+apk add \
+  util-linux lvm2 device-mapper exfatprogs fuse-exfat gcompat openssh \
+  neovim tree-sitter tree-sitter-cli lua-language-server \
+  git lazygit git-delta gh \
+  python3 py3-pip py3-virtualenv py3-pipx ruff black \
+  nodejs npm rust cargo build-base \
+  curl wget rsync tar unzip sqlite yq jq \
+  bat eza zoxide starship fzf ripgrep fd tree less \
+  btop ncdu duf strace lsof mtr htop tmux bash \
+  gnupg pass age android-tools
 
 echo "root:kattze" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
@@ -17,7 +26,7 @@ rc-update add sshd boot
 mkdir -p ~/.config ~/.local/share ~/.local/state ~/.cache ~/workspace
 
 if grep -qs '/mnt/ventoy' /proc/mounts; then
-  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/share /mnt/ventoy/.nvim/state /mnt/ventoy/.nvim/cache /mnt/ventoy/workspace
+  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/share /mnt/ventoy/.nvim/state /mntoy/.nvim/cache /mntoy/workspace
   
   if [ ! -f "/mnt/ventoy/.nvim/config/init.lua" ]; then
     if [ -f "./config/nvim/init.lua" ]; then
@@ -50,5 +59,3 @@ QRCP_URL=$(curl -s https://api.github.com/repos/claudiodangelis/qrcp/releases/la
 curl -L "$QRCP_URL" -o qrcp.tar.gz
 tar -xzf qrcp.tar.gz -C /usr/local/bin qrcp
 rm qrcp.tar.gz
-
-echo "[KATTZE] ¡Despliegue finalizado exitosamente!"
