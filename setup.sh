@@ -10,13 +10,13 @@ apk update
 apk add \
   util-linux lvm2 device-mapper exfatprogs fuse-exfat gcompat openssh \
   neovim tree-sitter tree-sitter-cli lua-language-server \
-  git lazygit git-delta gh \
-  python3 py3-pip py3-virtualenv py3-pipx ruff black \
+  git lazygit github-cli \
+  python3 py3-pip py3-virtualenv pipx ruff black \
   nodejs npm rust cargo build-base \
   curl wget rsync tar unzip sqlite yq jq \
   bat eza zoxide starship fzf ripgrep fd tree less \
-  btop ncdu duf strace lsof mtr htop tmux bash \
-  gnupg pass age android-tools
+  btop ncdu strace lsof mtr htop tmux bash \
+  gnupg pass age android-tools 
 
 echo "root:kattze" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
@@ -26,7 +26,7 @@ rc-update add sshd boot
 mkdir -p ~/.config ~/.local/share ~/.local/state ~/.cache ~/workspace
 
 if grep -qs '/mnt/ventoy' /proc/mounts; then
-  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/share /mnt/ventoy/.nvim/state /mntoy/.nvim/cache /mntoy/workspace
+  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/share /mnt/ventoy/.nvim/state /mnt/ventoy/.nvim/cache /mnt/ventoy/workspace
   
   if [ ! -f "/mnt/ventoy/.nvim/config/init.lua" ]; then
     if [ -f "./config/nvim/init.lua" ]; then
