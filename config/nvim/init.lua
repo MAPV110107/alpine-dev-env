@@ -9,16 +9,23 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   })
 end
+
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+
   },
   defaults = {
     lazy = false,
-    version = false,
+    version = false, 
   },
   install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = { enabled = true },
+  checker = { enabled = true }, 
+  
+  git = {
+    timeout = 600,
+  },
+  concurrency = 4,
 })
