@@ -19,7 +19,7 @@ apk add \
   gnupg pass age android-tools \
   docker docker-cli-compose
 
-echo "root:kattze" | chpasswd
+echo "root:root" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 rc-service sshd start
 rc-update add sshd boot
@@ -39,7 +39,7 @@ if grep -qs '/mnt/ventoy' /proc/mounts; then
   fi
   
   if [ ! -f "/mnt/ventoy/kattze_nvim_share.img" ]; then
-    dd if=/dev/zero of=/mnt/ventoy/kattze_nvim_share.img bs=1M count=500 status=none
+    dd if=/dev/zero of=/mnt/ventoy/kattze_nvim_share.img bs=1M count=2048 status=none
     mkfs.ext4 -q /mnt/ventoy/kattze_nvim_share.img
   fi
   
