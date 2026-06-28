@@ -16,9 +16,10 @@ apk add \
   curl wget rsync tar unzip sqlite yq jq \
   bat eza zoxide starship fzf ripgrep fd tree less \
   btop ncdu strace lsof mtr htop tmux bash \
-  gnupg pass age android-tools 
+  gnupg pass age android-tools \
+  docker docker-cli-compose
 
-echo "root:kattze" | chpasswd
+echo "root:katze" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 rc-service sshd start
 rc-update add sshd boot
@@ -26,7 +27,7 @@ rc-update add sshd boot
 mkdir -p ~/.config ~/.local/share ~/.local/state ~/.cache ~/workspace
 
 if grep -qs '/mnt/ventoy' /proc/mounts; then
-  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/share /mnt/ventoy/.nvim/state /mnt/ventoy/.nvim/cache /mnt/ventoy/workspace
+  mkdir -p /mnt/ventoy/.nvim/config /mnt/ventoy/.nvim/state /mnt/ventoy/.nvim/cache /mnt/ventoy/workspace
   
   if [ ! -f "/mnt/ventoy/.nvim/config/init.lua" ]; then
     if [ -f "./config/nvim/init.lua" ]; then
@@ -37,9 +38,17 @@ if grep -qs '/mnt/ventoy' /proc/mounts; then
     fi
   fi
   
+  if [ ! -f "/mnt/ventoy/kattze_nvim_share.img" ]; then
+    dd if=/dev/zero of=/mnt/ventoy/kattze_nvim_share.img bs=1M count=500 status=none
+    mkfs.ext4 -q /mnt/ventoy/kattze_nvim_share.img
+  fi
+  
   rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim ~/workspace
+  mkdir -p ~/.local/share/nvim
+  
+  mount -o loop /mnt/ventoy/kattze_nvim_share.img ~/.local/share/nvim
+  
   ln -s /mnt/ventoy/.nvim/config ~/.config/nvim
-  ln -s /mnt/ventoy/.nvim/share ~/.local/share/nvim
   ln -s /mnt/ventoy/.nvim/state ~/.local/state/nvim
   ln -s /mnt/ventoy/.nvim/cache ~/.cache/nvim
   ln -s /mnt/ventoy/workspace ~/workspace
@@ -53,9 +62,13 @@ else
   fi
 fi
 
+echo "[KATTZE] Desplegando utilidades de red y transferencia..."
 npm install -g localtunnel
 
-QRCP_URL=$(curl -s https://api.github.com/repos/claudiodangelis/qrcp/releases/latest | jq -r '.assets[] | select(.name | contains("linux_x86_64.tar.gz")) | .browser_download_url' | head -n 1)
-curl -L "$QRCP_URL" -o qrcp.tar.gz
-tar -xzf qrcp.tar.gz -C /usr/local/bin qrcp
-rm qrcp.tar.gz
+QRCP_URL=$(curl -s https://api.github.com/repos/claudiodangelis/qrcp/releases/latest | jq -r '.assets[]? | select(.name | contains("linux_x86_64.tar.gz")) | .browser_download_url' | head -n 1)
+
+if [ -n "$QRCP_URL" ] && [ "$QRCP_URL" != "null" ]; then
+  curl -L "$QRCP_URL" -o qrcp.tar.gz
+  tar -xzf qrcp.tar.gz -C /usr/local/bin qrcp
+  rm qrcp.tar.gz
+fi
