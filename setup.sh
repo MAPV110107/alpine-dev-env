@@ -8,7 +8,7 @@ echo "$(cat /etc/apk/repositories | grep main | head -n 1 | sed 's/main/communit
 apk update
 
 apk add \
-  util-linux lvm2 device-mapper exfatprogs fuse-exfat gcompat openssh \
+  util-linux lvm2 device-mapper exfatprogs fuse-exfat gcompat openssh e2fsprogs \
   neovim tree-sitter tree-sitter-cli lua-language-server \
   git lazygit github-cli \
   python3 py3-pip py3-virtualenv pipx ruff black \
@@ -19,7 +19,7 @@ apk add \
   gnupg pass age android-tools \
   docker docker-cli-compose
 
-echo "root:katze" | chpasswd
+echo "root:kattze" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 rc-service sshd start
 rc-update add sshd boot
@@ -62,8 +62,7 @@ else
   fi
 fi
 
-echo "[KATTZE] Desplegando utilidades de red y transferencia..."
-npm install -g localtunnel
+npm install -g localtunnel serve
 
 QRCP_URL=$(curl -s https://api.github.com/repos/claudiodangelis/qrcp/releases/latest | jq -r '.assets[]? | select(.name | contains("linux_x86_64.tar.gz")) | .browser_download_url' | head -n 1)
 

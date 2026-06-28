@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    
   },
   defaults = {
     lazy = false,
@@ -26,5 +25,5 @@ require("lazy").setup({
   checker = { enabled = true }, 
   
   git = { timeout = 600 },
-  concurrency = 4, 
+  concurrency = 6, 
 })
