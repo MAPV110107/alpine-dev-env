@@ -29,7 +29,7 @@ apk update
 
 apk add \
   util-linux exfatprogs fuse-exfat gcompat openssh e2fsprogs \
-  neovim git lazygit \
+  neovim tree-sitter tree-sitter-cli git lazygit \
   python3 py3-pip py3-virtualenv pipx \
   nodejs npm build-base \
   curl wget rsync tar unzip sqlite yq jq \
@@ -42,6 +42,15 @@ mkdir -p ~/.config ~/.local/state ~/.cache ~/workspace ~/.local/share/nvim
 if grep -qs "$USB_MOUNT" /proc/mounts; then
   mount -o loop "$NVIM_IMG" ~/.local/share/nvim
   
+  if [ ! -f "$USB_MOUNT/.nvim/config/init.lua" ]; then
+    if [ -f "./config/nvim/init.lua" ]; then
+      cp -a ./config/nvim/. "$USB_MOUNT/.nvim/config/"
+    else
+      git clone https://github.com/LazyVim/starter "$USB_MOUNT/.nvim/config"
+      rm -rf "$USB_MOUNT/.nvim/config/.git"
+    fi
+  fi
+
   ln -s "$USB_MOUNT/.nvim/config" ~/.config/nvim
   ln -s "$USB_MOUNT/.nvim/state" ~/.local/state/nvim
   ln -s "$USB_MOUNT/.nvim/cache" ~/.cache/nvim
