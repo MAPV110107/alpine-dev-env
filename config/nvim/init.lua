@@ -43,5 +43,5 @@ require("lazy").setup({
   install = { colorscheme = { "tokyonight" } },
   checker = { enabled = true }, 
   git = { timeout = 600 },
-  concurrency = 4, 
+  concurrency = 6, 
 })

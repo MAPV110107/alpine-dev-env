@@ -13,7 +13,7 @@ echo "$(cat /etc/apk/repositories | grep main | head -n 1 | sed 's/main/communit
 if grep -qs "$USB_MOUNT" /proc/mounts; then
   mkdir -p "$USB_MOUNT/.nvim/config" "$USB_MOUNT/.nvim/state" "$USB_MOUNT/.nvim/cache"
   mkdir -p "$USB_MOUNT/workspace"
-  mkdir -p "$CACHE_DIR/apk" "$CACHE_DIR/npm-cache"
+  mkdir -p "$CACHE_DIR/apk" "$CACHE_DIR/npm-cache" "$CACHE_DIR/pip-cache"
 
   rm -rf /etc/apk/cache
   ln -s "$CACHE_DIR/apk" /etc/apk/cache
@@ -37,7 +37,7 @@ apk add \
   btop ncdu strace lsof mtr htop tmux bash \
   gnupg pass age android-tools
 
-pip install --upgrade python-discovery virtualenv --break-system-packages
+pip install --upgrade python-discovery virtualenv --break-system-packages --cache-dir "$CACHE_DIR/pip-cache"
 
 mkdir -p ~/.config ~/.local/state ~/.cache ~/workspace ~/.local/share/nvim
 
@@ -72,7 +72,6 @@ if ! command -v serve &> /dev/null; then
   npm install -g localtunnel serve
 fi
 
-echo "root:kattze" | chpasswd
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 rc-service sshd start
 rc-update add sshd boot
