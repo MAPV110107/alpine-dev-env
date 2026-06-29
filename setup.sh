@@ -13,7 +13,7 @@ echo "$(cat /etc/apk/repositories | grep main | head -n 1 | sed 's/main/communit
 if grep -qs "$USB_MOUNT" /proc/mounts; then
   mkdir -p "$USB_MOUNT/.nvim/config" "$USB_MOUNT/.nvim/state" "$USB_MOUNT/.nvim/cache"
   mkdir -p "$USB_MOUNT/workspace"
-  mkdir -p "$CACHE_DIR/apk" "$CACHE_DIR/npm-global"
+  mkdir -p "$CACHE_DIR/apk" "$CACHE_DIR/npm-cache"
 
   rm -rf /etc/apk/cache
   ln -s "$CACHE_DIR/apk" /etc/apk/cache
@@ -28,20 +28,18 @@ fi
 apk update
 
 apk add \
-  util-linux lvm2 device-mapper exfatprogs fuse-exfat gcompat openssh e2fsprogs \
-  neovim tree-sitter tree-sitter-cli lua-language-server \
-  git lazygit github-cli \
-  python3 py3-pip py3-virtualenv pipx ruff black \
-  nodejs npm rust cargo build-base \
+  util-linux exfatprogs fuse-exfat gcompat openssh e2fsprogs \
+  neovim git lazygit \
+  python3 py3-pip py3-virtualenv pipx \
+  nodejs npm build-base \
   curl wget rsync tar unzip sqlite yq jq \
   bat eza zoxide starship fzf ripgrep fd tree less \
   btop ncdu strace lsof mtr htop tmux bash \
-  gnupg pass age android-tools \
-  docker docker-cli-compose
+  gnupg pass age android-tools
+
+mkdir -p ~/.config ~/.local/state ~/.cache ~/workspace ~/.local/share/nvim
 
 if grep -qs "$USB_MOUNT" /proc/mounts; then
-  rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim ~/workspace
-  mkdir -p ~/.local/share/nvim
   mount -o loop "$NVIM_IMG" ~/.local/share/nvim
   
   ln -s "$USB_MOUNT/.nvim/config" ~/.config/nvim
@@ -49,10 +47,14 @@ if grep -qs "$USB_MOUNT" /proc/mounts; then
   ln -s "$USB_MOUNT/.nvim/cache" ~/.cache/nvim
   ln -s "$USB_MOUNT/workspace" ~/workspace
 
-  npm config set prefix "$CACHE_DIR/npm-global"
-  echo "export PATH=$CACHE_DIR/npm-global/bin:\$PATH" >> ~/.bashrc
-  echo "export PATH=$CACHE_DIR/npm-global/bin:\$PATH" >> ~/.profile
-  export PATH=$CACHE_DIR/npm-global/bin:$PATH
+  NPM_PREFIX="/root/.local/share/nvim/npm-global"
+  mkdir -p "$NPM_PREFIX"
+  npm config set cache "$CACHE_DIR/npm-cache"
+  npm config set prefix "$NPM_PREFIX"
+  
+  echo "export PATH=$NPM_PREFIX/bin:\$PATH" >> ~/.bashrc
+  echo "export PATH=$NPM_PREFIX/bin:\$PATH" >> ~/.profile
+  export PATH=$NPM_PREFIX/bin:$PATH
 fi
 
 if ! command -v serve &> /dev/null; then
