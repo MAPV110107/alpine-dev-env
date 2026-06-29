@@ -37,6 +37,8 @@ apk add \
   btop ncdu strace lsof mtr htop tmux bash \
   gnupg pass age android-tools
 
+pip install --upgrade python-discovery virtualenv --break-system-packages
+
 mkdir -p ~/.config ~/.local/state ~/.cache ~/workspace ~/.local/share/nvim
 
 if grep -qs "$USB_MOUNT" /proc/mounts; then
